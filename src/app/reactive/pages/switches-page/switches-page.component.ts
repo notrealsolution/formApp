@@ -7,16 +7,22 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   ]
 })
 export class SwitchesPageComponent implements OnInit{
+
   public myForm: FormGroup = this.fb.group({
     gender: [ 'M', Validators.required ],
     wantNotifications: [ true, Validators.required ],
     termsAndConditions: [ false, Validators.required ]
   })
 
+  public person = {
+    gender:'F',
+    wantNotifications: false
+  }
   constructor( private fb: FormBuilder ){  }
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    console.log("Iniciando switches")
+    this.myForm.reset( this.person );
   }
 
 
@@ -25,5 +31,16 @@ export class SwitchesPageComponent implements OnInit{
       this.myForm.markAllAsTouched();
       return;
     }
+    const {  termsAndConditions, ... newPerson } = this.myForm.value;
+    this.person = newPerson;
+    console.log(this.person);
+    console.log(this.myForm.value);
   }
+
+  isValidField( field: string): boolean | null{
+    if( this.myForm.value.termsAndConditions === false ) return true;
+    return this.myForm.controls[field].errors
+      && this.myForm.controls[field].touched;
+  }
+
 }
